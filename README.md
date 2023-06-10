@@ -21,12 +21,7 @@ On Fedora:
 
 `sudo dnf install tk`
 
-## Install OpenCV
-
-If you have not yet installed [OpenCV](https://pypi.org/project/opencv-python/) and [hdf5](https://www.archlinux.org/packages/community/x86_64/hdf5/), do it. E.g. on Arch Linux:
-
-`pacman -S opencv python-opencv hdf5`
-
+Possibly some other dependencies... let us know if you have trouble here!
 
 ## Run the Python program
 

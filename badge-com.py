@@ -4,7 +4,7 @@ ports = list(serial.tools.list_ports.comports())
 
 for port, desc, hwid in sorted(ports):
         print("{}: {} [{}]".format(port, desc, hwid))
-        if "Pico W - CircuitPython CDC2" in desc:
+        if "Pico W - CircuitPython CDC" in desc:
             print(f"badge found! port: {port}")
             badge_port = port
 

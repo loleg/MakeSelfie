@@ -3,6 +3,7 @@
 # Requires:
 #  lib/neopixel.mpy
 
+
 import time
 import board
 import busio
@@ -14,8 +15,9 @@ import touchio
 import binascii
 import usb_cdc
 
-
 uart = busio.UART(board.GP4, board.GP5, baudrate=9600, timeout=20)
+
+usb_cdc.data.write(b"federico_vanzati")
 
 pixel_pin = board.GP22
 num_pixels = 6
@@ -98,6 +100,7 @@ lora_ids = lora_get_ids()
 rainbow_cycle(0)
 
 while True:
+    print("federico_vanzati")
     if(tp1.value == True and tp1_prev == False):
         # TP1 button pressed
         usb_cdc.data.write(uid)

@@ -3,7 +3,46 @@ import PySimpleGUI as sg
 import imageio.v3 as iio
 import requests, random
 import numpy as np
+import serial.tools.list_ports
+import time
 
+# Connect to serial
+
+ENABLE_BADGE = False
+
+ports = list(serial.tools.list_ports.comports())
+
+def get_badge_port():
+    for port, desc, hwid in sorted(ports):
+            print("{}: {} [{}]".format(port, desc, hwid))
+            if "Pico W - CircuitPython CDC " in desc:
+                print(f"badge found! port: {port}")
+                return port
+
+def get_username_data(username):
+    # Super safe internet request :-P
+    url = '/'.join(['https://now.makezurich.ch/api/user', str(username)])
+    print(url)
+    r = requests.get(url)
+
+    if r.status_code == 200:
+        userdata = r.json()
+        print(userdata)
+        window['Ustory'].update(userdata['my_story'])
+        window['Uscore'].update(userdata['score'])
+
+    elif r.status_code == 404:
+        print('User not found')
+        window['-LABEL1-'].update('User not found, please try again')
+
+    else:  
+        print('Houston we have a problem')
+        print(r.text)
+
+ser = None
+badge_port = None
+
+# Set up window layout
 sg.theme('Light blue 1')
 
 layout = [  
@@ -32,7 +71,34 @@ recording = False
 
 while True:
  
-    event, values = window.read(timeout=200)
+    event, values = window.read(timeout=50)
+
+    if ENABLE_BADGE and not values['-INPUT-']:
+        if badge_port:
+            val = ""
+            try:
+                val = ser.readline()
+            except serial.serialutil.SerialException as ex:
+                badge_port = None
+                print("Badge removed")
+                print(ex)
+            if len(val) > 4 and len(val) < 20 and not b'\n' in val:
+                print(val)
+                val = str(val)
+                username = values['-INPUT-']
+                if val != username:
+                    window['-INPUT-'].update(val)
+                    get_username_data(val)
+        else:
+            try:
+                badge_port = get_badge_port()
+                if badge_port:
+                    ser = serial.Serial(badge_port)
+                    print("Badge detected!")
+
+            except serial.serialutil.SerialException:
+                badge_port = None
+                print("Badge removed")
 
     if event in (sg.WIN_CLOSED, 'Exit'):
         break
@@ -40,23 +106,7 @@ while True:
     elif event == 'Record':
         username = values['-INPUT-']
         print('Hello', username)
-
-        # Super safe internet request :-P
-        r = requests.get('https://now.makezurich.ch/api/user/' + username)
-
-        if r.status_code == 200:
-            userdata = r.json()
-            print(userdata)
-            window['Ustory'].update(userdata['my_story'])
-            window['Uscore'].update(userdata['score'])
-
-        elif r.status_code == 404:
-            print('User not found')
-            window['-LABEL1-'].update('User not found, please try again')
-
-        else:  
-            print('Houston we have a problem')
-            print(r.text)
+        get_username_data(username)
 
     elif event == 'Stop' and not recording:
         recording = True
@@ -81,6 +131,7 @@ while True:
         frame = iio.imread("<video0>", index=0, size=(640, 480))
         video_bytes = iio.imwrite("<bytes>", frame, extension=".gif")
         window['image'].update(data=video_bytes)
+        time.sleep(0.2)
         
 
 window.close()

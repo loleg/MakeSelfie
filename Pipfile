@@ -8,6 +8,7 @@ pysimplegui = "*"
 requests = "*"
 imageio = "*"
 imageio-ffmpeg = "*"
+pyserial = "*"
 
 [dev-packages]
 
