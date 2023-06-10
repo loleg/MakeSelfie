@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "makeselfie"
+version = "0.1.0"
+description = "A MakeZürich 2023 project about Quantified Self"
+authors = ["Oleg Lavrovsky <loleg@users.noreply.github.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3"
+PySimpleGUI = "^4.60.5"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
