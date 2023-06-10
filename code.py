@@ -1,5 +1,9 @@
-# MakeZurich Badge 2023
-# Simple example on using the touch buttons from the cover
+# Script for the MakeZurich Badge 2023
+# ------------------------------------------
+# Used to demo the Quantified Selfie project
+
+# Change this to your username on now.makezurich.ch (dribdat)
+MY_USERNAME = 'loleg'
 
 # Requires:
 #  lib/neopixel.mpy
@@ -8,6 +12,7 @@ import time
 import board
 import touchio
 import neopixel
+
 
 # GP9, GP19, GP28 and GP14 connect to the touchpad (or a simple wire) and from there it needs
 # a 1M Ohm resistor to GND
@@ -34,9 +39,10 @@ BLACK = (0, 0, 0)
 pixels.fill(BLACK)
 pixels.show()
 
+# Now that we are ready, send some info to the SERIAL
+print("HELO", MY_USERNAME, board.board_id)
 
-print("HELO", 'loleg', board.board_id)
-
+# Blink the pixels
 pixels[1] = RED
 pixels[2] = GREEN
 pixels.show()
@@ -54,6 +60,7 @@ while True:
     if(tp2.value):
         pixels[2] = GREEN
         # feeling chirpy!
+        print("CHEESE!")
     else:
         pixels[2] = BLACK
     pixels.show()
