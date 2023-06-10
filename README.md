@@ -29,7 +29,13 @@ Make sure you have Python 3.10+ and Poetry installed, then:
 
 To get dependencies, and finally:
 
-`python makeselfie.py`
+`python selfie.py`
 
-Profit!
+## Set up your badge
+
+Copy the `code.py` file to your MakeZurich badge.
+
+Change the username to your account on https://now.makezurich.ch
+
+Connect or reset the badge while your Python program is running to generate a selfie.
 
